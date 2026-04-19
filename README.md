@@ -4,7 +4,7 @@ Forecastly is a modern weather application built with React that provides real-t
 
 The application allows users to search for any city and view current weather conditions, hourly forecasts, and a 5-day forecast. It also includes a section for quickly viewing weather in other major cities.
 
-Features
+<h3>Features</h3>
 - Real-time weather data integration via API
 - Hourly forecast with dynamic time progression
 - 5-day forecast with min/max temperature aggregation
@@ -13,13 +13,13 @@ Features
 - Smooth transitions and subtle animations
 - Modular component-based architecture
 
-Tech Stack
+<h3>Tech Stack</h3>
 - React (functional components and hooks)
 - JavaScript (ES6+)
 - CSS (custom styling, flexbox layouts)
 - Weather API (for live data)
 
-Key Learnings
+<h3>Key Learnings</h3>
 
 - API data handling and transformation
 - Component structuring and state management in React
