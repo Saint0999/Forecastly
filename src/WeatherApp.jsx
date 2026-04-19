@@ -82,7 +82,7 @@ function WeatherApp({data, selectedCity, setSelectedCity, isTransitioning, onSea
           </div>
 
           <div className="group">
-            <img className="search-icon" src="./src/assets/search.png"/>
+            <img className="search-icon" src="/search.png"/>
             <input className="input" placeholder="Search City" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { handleSearch(); }}}/>
           </div>
 
@@ -118,7 +118,7 @@ function WeatherApp({data, selectedCity, setSelectedCity, isTransitioning, onSea
                     </div>
                     <div className="lower-right">
                       <div className="wind-desc">
-                        <img className="wind-icon" src="/src/assets/wind.png"/>
+                        <img className="wind-icon" src="/wind.png"/>
                         <p className="city-wind"><strong>{Math.round(data.list[0].wind.speed)} m/s</strong></p>
                       </div>
                       <p className="city-temp-range">{Math.round(data.list[0].main.temp_min)} °C to {Math.round(data.list[0].main.temp_max)} °C</p>
