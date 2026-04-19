@@ -1,4 +1,4 @@
-Forecastly
+<h1 href="https://forecastly-kappa.vercel.app/">Forecastly</h1>
 
 Forecastly is a modern weather application built with React that provides real-time weather data along with an intuitive and visually polished user interface. The goal of this project was to focus not just on functionality, but on creating a smooth and engaging user experience.
 
@@ -25,6 +25,4 @@ Key Learnings
 - Component structuring and state management in React
 - UI/UX design principles and responsiveness
 - Handling asynchronous data and conditional rendering
-
-Link : https://forecastly-kappa.vercel.app/
 
