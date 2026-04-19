@@ -1,6 +1,5 @@
 {
   "name": "weather-app",
-  "homepage": "https://Saint0999.github.io/forecastly/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
