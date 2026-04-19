@@ -12,7 +12,8 @@ Features
 - Light and dark theme toggle
 - Smooth transitions and subtle animations
 - Modular component-based architecture
-- Tech Stack
+
+Tech Stack
 - React (functional components and hooks)
 - JavaScript (ES6+)
 - CSS (custom styling, flexbox layouts)
