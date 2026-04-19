@@ -1,16 +1,27 @@
-# React + Vite
+Forecastly
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Forecastly is a modern weather application built with React that provides real-time weather data along with an intuitive and visually polished user interface. The goal of this project was to focus not just on functionality, but on creating a smooth and engaging user experience.
 
-Currently, two official plugins are available:
+The application allows users to search for any city and view current weather conditions, hourly forecasts, and a 5-day forecast. It also includes a section for quickly viewing weather in other major cities.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Features
+- Real-time weather data integration via API
+- Hourly forecast with dynamic time progression
+- 5-day forecast with min/max temperature aggregation
+- Clean, responsive UI with glassmorphism design
+- Light and dark theme toggle
+- Smooth transitions and subtle animations
+- Modular component-based architecture
 
-## React Compiler
+Tech Stack
+- React (functional components and hooks)
+- JavaScript (ES6+)
+- CSS (custom styling, flexbox layouts)
+- Weather API (for live data)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Key Learnings
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- API data handling and transformation
+- Component structuring and state management in React
+- UI/UX design principles and responsiveness
+- Handling asynchronous data and conditional rendering
