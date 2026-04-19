@@ -66,7 +66,7 @@ function OtherCities({data}) {
                 </div>
                 <div className="lower-right">
                   <div className="wind-desc">
-                    <img className="wind-icon" src="/src/assets/wind.png" />
+                    <img className="wind-icon" src="/wind.png" />
                     <p className="city-wind"><strong>{Math.round(data.list[0].wind.speed)} m/s</strong></p>
                   </div>
                   <p className="city-temp-range">{Math.round(data.list[0].main.temp_min)} °C to {Math.round(data.list[0].main.temp_max)} °C</p>
