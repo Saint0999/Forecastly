@@ -66,7 +66,6 @@ body {
 .fade-out { opacity: 0; transition: opacity 0.2s ease; }
 .fade-in  { opacity: 1; transition: opacity 0.2s ease; }
 
-/* ── Top Bar ── */
 
 .top-bar {
   display: flex;
@@ -112,7 +111,6 @@ body {
 @media (min-width: 480px)  { .app-name { font-size: 1.1rem; } }
 @media (min-width: 768px)  { .app-name { font-size: 1.2rem; } }
 
-/* ── Search ── */
 
 .group {
   position: relative;
@@ -155,7 +153,6 @@ body {
   pointer-events: none;
 }
 
-/* ── Toggle switch ── */
 
 .switch {
   position: relative;
@@ -211,7 +208,6 @@ body {
   .switch input:checked + .slider::before { transform: translateX(30px); }
 }
 
-/* ── Layout ── */
 
 .main-layout { width: 100%; min-height: 100vh; }
 
@@ -255,8 +251,6 @@ body {
   width: 100%;
   min-width: 0;
 }
-
-/* ── Current Weather Card ── */
 
 .current-weather {
   background-color: var(--card-bg);
@@ -329,7 +323,6 @@ body {
   padding: var(--sp-2) 0 0 0;
 }
 
-/* ── Other Cities ── */
 
 .other-cities {
   display: flex;
@@ -338,7 +331,6 @@ body {
   width: 100%;
 }
 
-/* ── Hourly Forecast ── */
 
 .hourly-forecast {
   display: flex;
@@ -393,7 +385,6 @@ body {
 
 .hourly-icon-group p { margin: 0; font-size: 0.75rem; color: var(--text-secondary); }
 
-/* ── Daily Forecast ── */
 
 .daily-forecast {
   display: flex;
@@ -453,7 +444,6 @@ body {
 
 @media (min-width: 480px) { .temp { font-size: 1rem; width: 110px; } }
 
-/* ── Misc ── */
 
 .main-layout { width: 100%; min-height: 100vh; }
 
@@ -468,13 +458,6 @@ body {
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* ── Card slot ──────────────────────────────────────────────────────────────
-   .card-slot is a relative container that holds either skeleton OR real card.
-   During the crossfade (isFading), both .slot-layer children coexist:
-     - skeleton: position:absolute, fading out on top  (slot-out)
-     - real card: position:static, fading in beneath   (slot-in)
-   At all other times only ONE child is in the DOM — no layout shift possible.
-   ───────────────────────────────────────────────────────────────────────── */
 
 .card-slot {
   position: relative;
@@ -485,7 +468,6 @@ body {
   width: 100%;
 }
 
-/* Skeleton during crossfade: lifts out of flow so real card drives height */
 .slot-out {
   position: absolute;
   top: 0;
@@ -497,13 +479,11 @@ body {
   z-index: 1;
 }
 
-/* Real card during crossfade: fades in normally in flow */
 .slot-in {
   opacity: 1;
   transition: opacity 0.5s ease;
 }
 
-/* ── Skeleton shimmer ── */
 
 @keyframes shimmer {
   0%   { background-position: -1000px 0; }
@@ -543,7 +523,6 @@ body {
 .sk-line.lg       { height: 20px; }
 .sk-line.xl       { height: 28px; }
 
-/* Skeleton layout helpers */
 
 .skeleton-current {
   display: flex;
@@ -628,12 +607,6 @@ body {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════
-   INTRO SCREEN
-   ═══════════════════════════════════════════════════════════════ */
-
-/* ── Keyframes ── */
-
 @keyframes intro-fade-up {
   from { opacity: 0; transform: translateY(18px) scale(0.96); }
   to   { opacity: 1; transform: translateY(0)    scale(1);    }
@@ -670,8 +643,6 @@ body {
   100% { opacity: 0; filter: blur(8px);  }
 }
 
-/* ── Base screen ── */
-
 .intro-screen {
   position: fixed;
   inset: 0;
@@ -681,7 +652,7 @@ body {
   justify-content: center;
   overflow: hidden;
 
-  /* Matches app dark background */
+ 
   background: #0D111B;
 }
 
@@ -694,7 +665,6 @@ body {
   pointer-events: none;
 }
 
-/* ── Subtle dot-grid background ── */
 
 .intro-grid {
   position: absolute;
@@ -709,7 +679,6 @@ body {
   background-image: radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px);
 }
 
-/* ── Content container ── */
 
 .intro-content {
   display: flex;
@@ -720,7 +689,6 @@ body {
   padding: 0 24px;
 }
 
-/* ── Logo ── */
 
 .intro-logo-wrap {
   width: 88px;
@@ -749,7 +717,6 @@ body {
   object-fit: contain;
 }
 
-/* ── App name — letter by letter ── */
 
 .intro-title {
   font-family: 'Roboto', sans-serif;
@@ -773,7 +740,6 @@ body {
   animation: intro-char-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* ── Tagline ── */
 
 .intro-tagline {
   height: 20px;
@@ -795,8 +761,6 @@ body {
 .intro-screen.light .intro-tagline-inner {
   color: rgba(0, 0, 0, 0.4);
 }
-
-/* ── Progress bar ── */
 
 .intro-progress {
   width: 120px;

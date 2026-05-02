@@ -8,9 +8,7 @@ function App() {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [isDark, setIsDark] = useState(true);
   const [phase, setPhase] = useState("idle");
-  // phases: "idle" | "loading" | "fading" | "done"
-
-  // Intro plays once per session; sessionStorage persists until tab is closed
+  
   const [showIntro, setShowIntro] = useState(
     () => !sessionStorage.getItem("introPlayed")
   );
@@ -68,13 +66,10 @@ function App() {
 
   return (
     <>
-      {/* Intro sits above everything in the stacking context.
-          It unmounts itself cleanly after the fade-out completes. */}
       {showIntro && (
         <IntroScreen onDone={handleIntroDone} isDark={isDark} />
       )}
 
-      {/* Main app always renders underneath — no remount, no layout flash */}
       <WeatherApp
         data={currentWeather}
         selectedCity={selectedCity}

@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
 
-// Total sequence:
-//  0.0s  — logo fades + scales in        (0.8s)
-//  0.6s  — tagline chars stagger in      (each 0.06s apart × 10 chars = ~1.2s)
-//  2.0s  — hold
-//  2.4s  — whole screen fades out        (0.6s)
-//  3.0s  — onDone() fires, component unmounts
-
 function IntroScreen({ onDone, isDark }) {
   const [leaving, setLeaving] = useState(false);
 
@@ -23,11 +16,11 @@ function IntroScreen({ onDone, isDark }) {
 
   return (
     <div className={`intro-screen ${leaving ? "intro-leave" : ""} ${isDark ? "dark" : "light"}`}>
-      {/* Subtle animated grid lines for depth */}
+    
       <div className="intro-grid" aria-hidden="true" />
 
       <div className="intro-content">
-        {/* Logo */}
+        
         <div className="intro-logo-wrap">
           <img
             src="/logoMain.png"
@@ -37,7 +30,7 @@ function IntroScreen({ onDone, isDark }) {
           />
         </div>
 
-        {/* App name — each letter animates in individually */}
+        
         <h1 className="intro-title" aria-label="Forecastly">
           {appName.split("").map((char, i) => (
             <span
@@ -50,12 +43,11 @@ function IntroScreen({ onDone, isDark }) {
           ))}
         </h1>
 
-        {/* Tagline */}
+        
         <p className="intro-tagline">
           <span className="intro-tagline-inner">Your weather, beautifully told.</span>
         </p>
 
-        {/* Bottom progress line */}
         <div className="intro-progress" aria-hidden="true">
           <div className="intro-progress-bar" />
         </div>
