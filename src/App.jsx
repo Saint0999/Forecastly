@@ -1,12 +1,24 @@
 import './index.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import WeatherApp from './WeatherApp.jsx'
+import IntroScreen from './IntroScreen.jsx'
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("");
   const [currentWeather, setCurrentWeather] = useState(null);
   const [isDark, setIsDark] = useState(true);
   const [phase, setPhase] = useState("idle");
+  // phases: "idle" | "loading" | "fading" | "done"
+
+  // Intro plays once per session; sessionStorage persists until tab is closed
+  const [showIntro, setShowIntro] = useState(
+    () => !sessionStorage.getItem("introPlayed")
+  );
+
+  const handleIntroDone = useCallback(() => {
+    sessionStorage.setItem("introPlayed", "1");
+    setShowIntro(false);
+  }, []);
 
   const handleSearch = (searchQuery) => {
     if (!searchQuery.trim()) return;
@@ -55,15 +67,24 @@ function App() {
   }, [selectedCity]);
 
   return (
-    <WeatherApp
-      data={currentWeather}
-      selectedCity={selectedCity}
-      setSelectedCity={setSelectedCity}
-      onSearch={handleSearch}
-      isDark={isDark}
-      setIsDark={setIsDark}
-      skeletonPhase={phase}
-    />
+    <>
+      {/* Intro sits above everything in the stacking context.
+          It unmounts itself cleanly after the fade-out completes. */}
+      {showIntro && (
+        <IntroScreen onDone={handleIntroDone} isDark={isDark} />
+      )}
+
+      {/* Main app always renders underneath — no remount, no layout flash */}
+      <WeatherApp
+        data={currentWeather}
+        selectedCity={selectedCity}
+        setSelectedCity={setSelectedCity}
+        onSearch={handleSearch}
+        isDark={isDark}
+        setIsDark={setIsDark}
+        skeletonPhase={phase}
+      />
+    </>
   );
 }
 

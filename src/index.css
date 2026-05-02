@@ -66,6 +66,8 @@ body {
 .fade-out { opacity: 0; transition: opacity 0.2s ease; }
 .fade-in  { opacity: 1; transition: opacity 0.2s ease; }
 
+/* ── Top Bar ── */
+
 .top-bar {
   display: flex;
   align-items: center;
@@ -110,6 +112,7 @@ body {
 @media (min-width: 480px)  { .app-name { font-size: 1.1rem; } }
 @media (min-width: 768px)  { .app-name { font-size: 1.2rem; } }
 
+/* ── Search ── */
 
 .group {
   position: relative;
@@ -152,6 +155,7 @@ body {
   pointer-events: none;
 }
 
+/* ── Toggle switch ── */
 
 .switch {
   position: relative;
@@ -207,6 +211,7 @@ body {
   .switch input:checked + .slider::before { transform: translateX(30px); }
 }
 
+/* ── Layout ── */
 
 .main-layout { width: 100%; min-height: 100vh; }
 
@@ -251,6 +256,7 @@ body {
   min-width: 0;
 }
 
+/* ── Current Weather Card ── */
 
 .current-weather {
   background-color: var(--card-bg);
@@ -323,6 +329,7 @@ body {
   padding: var(--sp-2) 0 0 0;
 }
 
+/* ── Other Cities ── */
 
 .other-cities {
   display: flex;
@@ -331,6 +338,7 @@ body {
   width: 100%;
 }
 
+/* ── Hourly Forecast ── */
 
 .hourly-forecast {
   display: flex;
@@ -385,6 +393,7 @@ body {
 
 .hourly-icon-group p { margin: 0; font-size: 0.75rem; color: var(--text-secondary); }
 
+/* ── Daily Forecast ── */
 
 .daily-forecast {
   display: flex;
@@ -444,6 +453,7 @@ body {
 
 @media (min-width: 480px) { .temp { font-size: 1rem; width: 110px; } }
 
+/* ── Misc ── */
 
 .main-layout { width: 100%; min-height: 100vh; }
 
@@ -458,6 +468,14 @@ body {
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+/* ── Card slot ──────────────────────────────────────────────────────────────
+   .card-slot is a relative container that holds either skeleton OR real card.
+   During the crossfade (isFading), both .slot-layer children coexist:
+     - skeleton: position:absolute, fading out on top  (slot-out)
+     - real card: position:static, fading in beneath   (slot-in)
+   At all other times only ONE child is in the DOM — no layout shift possible.
+   ───────────────────────────────────────────────────────────────────────── */
+
 .card-slot {
   position: relative;
   width: 100%;
@@ -467,6 +485,7 @@ body {
   width: 100%;
 }
 
+/* Skeleton during crossfade: lifts out of flow so real card drives height */
 .slot-out {
   position: absolute;
   top: 0;
@@ -478,11 +497,13 @@ body {
   z-index: 1;
 }
 
-
+/* Real card during crossfade: fades in normally in flow */
 .slot-in {
   opacity: 1;
   transition: opacity 0.5s ease;
 }
+
+/* ── Skeleton shimmer ── */
 
 @keyframes shimmer {
   0%   { background-position: -1000px 0; }
@@ -522,6 +543,7 @@ body {
 .sk-line.lg       { height: 20px; }
 .sk-line.xl       { height: 28px; }
 
+/* Skeleton layout helpers */
 
 .skeleton-current {
   display: flex;
@@ -603,4 +625,202 @@ body {
   gap: var(--sp-2);
   width: 110px;
   flex-shrink: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   INTRO SCREEN
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Keyframes ── */
+
+@keyframes intro-fade-up {
+  from { opacity: 0; transform: translateY(18px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+@keyframes intro-logo-in {
+  0%   { opacity: 0; transform: scale(0.7) rotate(-8deg); filter: blur(6px); }
+  60%  { opacity: 1; transform: scale(1.06) rotate(1deg); filter: blur(0);   }
+  100% { opacity: 1; transform: scale(1)    rotate(0deg); filter: blur(0);   }
+}
+
+@keyframes intro-char-in {
+  from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0);   }
+}
+
+@keyframes intro-tagline-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+
+@keyframes intro-progress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes intro-grid-pan {
+  from { background-position: 0 0;    }
+  to   { background-position: 40px 40px; }
+}
+
+@keyframes intro-screen-out {
+  0%   { opacity: 1; filter: blur(0);    }
+  100% { opacity: 0; filter: blur(8px);  }
+}
+
+/* ── Base screen ── */
+
+.intro-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  /* Matches app dark background */
+  background: #0D111B;
+}
+
+.intro-screen.light {
+  background: #e8e8e8;
+}
+
+.intro-screen.intro-leave {
+  animation: intro-screen-out 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+}
+
+/* ── Subtle dot-grid background ── */
+
+.intro-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: intro-grid-pan 4s linear infinite;
+  pointer-events: none;
+}
+
+.intro-screen.light .intro-grid {
+  background-image: radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px);
+}
+
+/* ── Content container ── */
+
+.intro-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+  padding: 0 24px;
+}
+
+/* ── Logo ── */
+
+.intro-logo-wrap {
+  width: 88px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: intro-logo-in 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.intro-screen.light .intro-logo-wrap {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.intro-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+/* ── App name — letter by letter ── */
+
+.intro-title {
+  font-family: 'Roboto', sans-serif;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  gap: 0;
+  line-height: 1;
+  user-select: none;
+}
+
+.intro-screen.light .intro-title {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.intro-char {
+  display: inline-block;
+  opacity: 0;
+  animation: intro-char-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ── Tagline ── */
+
+.intro-tagline {
+  height: 20px;
+  overflow: hidden;
+}
+
+.intro-tagline-inner {
+  display: block;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  animation: intro-tagline-in 0.6s ease forwards;
+  animation-delay: 1.6s;
+}
+
+.intro-screen.light .intro-tagline-inner {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/* ── Progress bar ── */
+
+.intro-progress {
+  width: 120px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.intro-screen.light .intro-progress {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.intro-progress-bar {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(115, 192, 252, 0.8), rgba(115, 192, 252, 0.3));
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: intro-progress 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 0.3s;
+}
+
+.intro-screen.light .intro-progress-bar {
+  background: linear-gradient(90deg, rgba(24, 49, 83, 0.7), rgba(24, 49, 83, 0.2));
 }
