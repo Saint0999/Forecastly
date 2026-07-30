@@ -143,6 +143,16 @@ body {
 .input:hover        { box-shadow: 0 0 0 2.5px #2f303d; }
 .input:focus        { box-shadow: 0 0 0 2.5px #2f303d; }
 
+.search-error {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: var(--sp-1);
+  font-size: 0.75rem;
+  color: #e0625c;
+  white-space: nowrap;
+}
+
 .search-icon {
   position: absolute;
   top: 50%;
