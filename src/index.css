@@ -31,6 +31,15 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
   --sk-base:  rgba(0, 0, 0, 0.07);
   --sk-shine: rgba(255, 255, 255, 0.45);
+  --input-bg:          rgba(255, 255, 255, 0.72);
+  --input-text:        rgba(0, 0, 0, 0.85);
+  --input-placeholder: rgba(0, 0, 0, 0.45);
+  --input-ring:        rgba(0, 0, 0, 0.12);
+  --input-ring-active: rgba(0, 0, 0, 0.3);
+  /* The search glyph ships as a light grey PNG, which disappears on a light
+     field; inverting it lands on a readable dark grey. */
+  --search-icon-filter: invert(1);
+  --scroll-thumb: rgba(0, 0, 0, 0.2);
 }
 
 .dark {
@@ -43,6 +52,13 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --sk-base:  rgba(255, 255, 255, 0.07);
   --sk-shine: rgba(255, 255, 255, 0.18);
+  --input-bg:          #16171d;
+  --input-text:        #bdbecb;
+  --input-placeholder: rgba(189, 190, 203, 0.7);
+  --input-ring:        #2b2c37;
+  --input-ring-active: #2f303d;
+  --search-icon-filter: none;
+  --scroll-thumb: rgba(255, 255, 255, 0.15);
 }
 
 body {
@@ -99,6 +115,16 @@ body {
   justify-content: center;
   gap: var(--sp-6);
   padding: var(--content-pad-x);
+  /* This overlay spans the viewport, so it would otherwise swallow clicks
+     meant for the theme toggle sitting beneath it in the top bar. Only the
+     actual content inside it should be interactive. */
+  pointer-events: none;
+}
+
+.app.landing .left-side,
+.app.landing .group,
+.app.landing .suggestions {
+  pointer-events: auto;
 }
 
 .app.landing .content-wrapper { display: none; }
@@ -225,18 +251,22 @@ body {
   padding: 0 var(--sp-3) 0 2.4rem;
   border: 0;
   border-radius: 25px;
-  background-color: #16171d;
-  color: #bdbecb;
+  background-color: var(--input-bg);
+  color: var(--input-text);
   outline: none;
-  box-shadow: 0 0 0 1.5px #2b2c37;
-  transition: box-shadow 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0 0 0 1.5px var(--input-ring);
+  backdrop-filter: blur(8px);
+  transition:
+    box-shadow 0.25s cubic-bezier(0.19, 1, 0.22, 1),
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 @media (min-width: 768px) { .input { font-size: 1rem; height: 44px; } }
 
-.input::placeholder { color: #bdbecb; opacity: 0.7; }
-.input:hover        { box-shadow: 0 0 0 2.5px #2f303d; }
-.input:focus        { box-shadow: 0 0 0 2.5px #2f303d; }
+.input::placeholder { color: var(--input-placeholder); }
+.input:hover        { box-shadow: 0 0 0 2.5px var(--input-ring-active); }
+.input:focus        { box-shadow: 0 0 0 2.5px var(--input-ring-active); }
 
 .search-error {
   position: absolute;
@@ -256,6 +286,10 @@ body {
   width: 1.2rem;
   height: 1.2rem;
   pointer-events: none;
+  filter: var(--search-icon-filter);
+  /* .input's backdrop-filter gives it a stacking context, which would paint
+     it over this icon since it comes later in the DOM. */
+  z-index: 1;
 }
 
 
@@ -445,12 +479,12 @@ body {
   width: 100%;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.15) transparent;
+  scrollbar-color: var(--scroll-thumb) transparent;
 }
 
 .hourly-forecast::-webkit-scrollbar       { height: 4px; }
 .hourly-forecast::-webkit-scrollbar-track { background: transparent; }
-.hourly-forecast::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+.hourly-forecast::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 2px; }
 
 .hour-card {
   background-color: var(--card-bg);
