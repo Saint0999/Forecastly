@@ -2,6 +2,22 @@ import './index.css'
 import { useState, useEffect, useCallback } from 'react'
 import WeatherApp from './WeatherApp.jsx'
 import IntroScreen from './IntroScreen.jsx'
+import { API_KEY } from './config.js'
+
+function errorMessageFor(data, city) {
+  switch (String(data.cod)) {
+    case "401":
+      return "Weather service rejected the API key.";
+    case "404":
+      return `City "${city}" not found.`;
+    case "429":
+      return "Too many requests. Please try again in a moment.";
+    default:
+      return data.message
+        ? `Couldn't load weather: ${data.message}`
+        : "Couldn't fetch weather data. Please try again.";
+  }
+}
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("");
@@ -27,7 +43,6 @@ function App() {
 
   useEffect(() => {
     if (!selectedCity) return;
-    const API_KEY = import.meta.env.VITE_OWM_API_KEY;
     let cancelled = false;
 
     async function fetchWeather() {
@@ -44,8 +59,10 @@ function App() {
         const data = await response.json();
         if (cancelled) return;
 
-        if (data.cod !== "200") {
-          setSearchError(`City "${selectedCity}" not found.`);
+        // OWM reports errors via `cod`, as a string on some endpoints and a
+        // number on others, so compare loosely.
+        if (String(data.cod) !== "200") {
+          setSearchError(errorMessageFor(data, selectedCity));
           setPhase("idle");
           return;
         }
