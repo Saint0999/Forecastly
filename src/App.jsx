@@ -8,7 +8,8 @@ function App() {
   const [currentWeather, setCurrentWeather] = useState(null);
   const [isDark, setIsDark] = useState(true);
   const [phase, setPhase] = useState("idle");
-  
+  const [searchError, setSearchError] = useState("");
+
   const [showIntro, setShowIntro] = useState(
     () => !sessionStorage.getItem("introPlayed")
   );
@@ -20,12 +21,14 @@ function App() {
 
   const handleSearch = (searchQuery) => {
     if (!searchQuery.trim()) return;
+    setSearchError("");
     setSelectedCity(searchQuery);
   };
 
   useEffect(() => {
     if (!selectedCity) return;
-    const API_KEY = "b165829b6d626fcd82a77fceb66003ee";
+    const API_KEY = import.meta.env.VITE_OWM_API_KEY;
+    let cancelled = false;
 
     async function fetchWeather() {
       try {
@@ -39,9 +42,10 @@ function App() {
         ]);
 
         const data = await response.json();
+        if (cancelled) return;
 
         if (data.cod !== "200") {
-          console.warn("City not found:", selectedCity);
+          setSearchError(`City "${selectedCity}" not found.`);
           setPhase("idle");
           return;
         }
@@ -50,18 +54,24 @@ function App() {
 
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
+            if (cancelled) return;
             setPhase("fading");
-            setTimeout(() => setPhase("done"), 500);
+            setTimeout(() => {
+              if (!cancelled) setPhase("done");
+            }, 500);
           });
         });
 
       } catch (error) {
+        if (cancelled) return;
         console.log(error);
+        setSearchError("Couldn't fetch weather data. Please try again.");
         setPhase("idle");
       }
     }
 
     fetchWeather();
+    return () => { cancelled = true; };
   }, [selectedCity]);
 
   return (
@@ -72,12 +82,11 @@ function App() {
 
       <WeatherApp
         data={currentWeather}
-        selectedCity={selectedCity}
-        setSelectedCity={setSelectedCity}
         onSearch={handleSearch}
         isDark={isDark}
         setIsDark={setIsDark}
         skeletonPhase={phase}
+        searchError={searchError}
       />
     </>
   );

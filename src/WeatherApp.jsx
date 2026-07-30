@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
-import OtherCities1 from "./OtherCities1";
-import OtherCities2 from "./OtherCities2";
-import OtherCities3 from "./OtherCities3";
+import OtherCities from "./OtherCities";
 import {
   SkeletonCurrentWeather,
   SkeletonHourlyForecast,
@@ -30,12 +28,11 @@ const weatherIcons = {
 
 function WeatherApp({
   data,
-  selectedCity,
-  setSelectedCity,
   onSearch,
   isDark,
   setIsDark,
   skeletonPhase = "idle",
+  searchError = "",
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [cityTime, setCityTime] = useState("");
@@ -89,6 +86,7 @@ function WeatherApp({
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") handleSearch(); }}
           />
+          {searchError && <p className="search-error">{searchError}</p>}
         </div>
         <div className="right-side">
           <label className="switch">
@@ -161,9 +159,9 @@ function WeatherApp({
             {showContent && (
               <div className={isFading ? "slot-layer slot-in" : "slot-layer"}>
                 <div className="other-cities">
-                  <OtherCities1 />
-                  <OtherCities2 />
-                  <OtherCities3 />
+                  <OtherCities city="London" />
+                  <OtherCities city="Tokyo" />
+                  <OtherCities city="New York" />
                 </div>
               </div>
             )}
