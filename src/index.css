@@ -75,6 +75,101 @@ body {
   max-width: var(--content-max);
   margin: 0 auto;
   padding: var(--sp-3) var(--content-pad-x);
+  /* Held stable so the theme toggle keeps its place when the lockup and
+     search bar leave the flow for the landing layout. */
+  min-height: 64px;
+}
+
+@media (min-width: 768px)  { .top-bar { min-height: 72px; } }
+@media (min-width: 1024px) { .top-bar { min-height: 80px; } }
+
+/* Transparent to layout normally, so .left-side and .group sit directly in
+   the top bar's flex row; becomes the centred column while landing. Keeping
+   one wrapper means those nodes are never remounted, which is what lets the
+   FLIP animation move them. */
+.bar-core { display: contents; }
+
+.app.landing .bar-core {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-6);
+  padding: var(--content-pad-x);
+}
+
+.app.landing .content-wrapper { display: none; }
+
+.app.landing .logo { height: 76px; }
+.app.landing .app-name { font-size: 1.6rem; letter-spacing: 0.06em; }
+
+@media (min-width: 768px) {
+  .app.landing .logo { height: 92px; }
+  .app.landing .app-name { font-size: 1.9rem; }
+}
+
+/* Width grows but height stays put, so the FLIP can animate real width
+   without stretching the placeholder text. `flex: none` overrides the
+   `flex: 1` that would otherwise stretch it down the column axis. */
+.app.landing .group {
+  flex: none;
+  width: 100%;
+  max-width: min(560px, 92vw);
+}
+
+/* Centred under the wide landing bar rather than pinned to its left edge. */
+.app.landing .search-error {
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-2);
+  /* Without this the row sizes to max-content and can outgrow narrow
+     viewports instead of wrapping. */
+  max-width: 100%;
+  animation: suggestions-in 0.5s 0.15s ease both;
+}
+
+@keyframes suggestions-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.suggestion {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  padding: var(--sp-2) var(--sp-4);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.suggestion:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+  transform: translateY(-1px);
+}
+
+.suggestion:focus-visible {
+  outline: 2px solid #73C0FC;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .suggestions { animation: none; }
+  .suggestion:hover { transform: none; }
 }
 
 .left-side {

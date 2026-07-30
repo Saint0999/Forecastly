@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import OtherCities from "./OtherCities";
@@ -26,6 +26,13 @@ const weatherIcons = {
   Haze: cloudIcon,
 };
 
+// Shown on the landing screen so the first search is one click away.
+// Deliberately distinct from the three cities pinned under "Other Cities".
+const CITY_SUGGESTIONS = ["Delhi", "Paris", "Singapore", "Sydney"];
+
+const FLIP_MS = 520;
+const FLIP_EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
+
 function WeatherApp({
   data,
   onSearch,
@@ -41,8 +48,68 @@ function WeatherApp({
   const isLoading    = skeletonPhase === "loading";
   const isFading     = skeletonPhase === "fading";
   const showSkeleton = isLoading || isFading;
-  
+
   const showContent  = isFading || skeletonPhase === "done";
+
+  // Landing = nothing has loaded yet and nothing is in flight. A failed
+  // search returns here, so the error stays attached to the centred bar.
+  const isLanding = !data && isIdle;
+
+  const lockupRef = useRef(null);
+  const groupRef = useRef(null);
+  const inputRef = useRef(null);
+  const lastRects = useRef({});
+  const wasLanding = useRef(isLanding);
+
+  // FLIP: the lockup and search bar are the same nodes in both layouts, so
+  // we can play the layout jump back as a real movement. This runs after
+  // every commit rather than only when `isLanding` flips, so the stored
+  // rects always describe the layout we are actually coming from.
+  useLayoutEffect(() => {
+    const layoutChanged = wasLanding.current !== isLanding;
+    wasLanding.current = isLanding;
+
+    const targets = { lockup: lockupRef.current, group: groupRef.current };
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    for (const [key, el] of Object.entries(targets)) {
+      if (!el) continue;
+
+      const next = el.getBoundingClientRect();
+      const last = lastRects.current[key];
+      lastRects.current[key] = next;
+
+      if (!layoutChanged || !last || reduceMotion || !next.width || !last.width) continue;
+
+      const dx = (last.left + last.width / 2) - (next.left + next.width / 2);
+      const dy = (last.top + last.height / 2) - (next.top + next.height / 2);
+      const scale = last.width / next.width;
+
+      if (Math.abs(dx) < 1 && Math.abs(dy) < 1 && Math.abs(scale - 1) < 0.01) continue;
+
+      // The search bar keeps a constant height between layouts, so animating
+      // its real width avoids the text distortion a scaleX would cause.
+      const frames = key === "group"
+        ? [
+            { transform: `translate(${dx}px, ${dy}px)`, width: `${last.width}px` },
+            { transform: "translate(0, 0)", width: `${next.width}px` },
+          ]
+        : [
+            { transform: `translate(${dx}px, ${dy}px) scale(${scale})` },
+            { transform: "none" },
+          ];
+
+      el.animate(frames, { duration: FLIP_MS, easing: FLIP_EASING });
+    }
+  });
+
+  // Focus the centred bar on pointer devices only, so mobile keyboards
+  // don't spring open on arrival.
+  useEffect(() => {
+    if (!isLanding) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+    inputRef.current?.focus();
+  }, [isLanding]);
 
   useEffect(() => {
     if (!data) return;
@@ -68,25 +135,42 @@ function WeatherApp({
   };
 
   return (
-    <div className={`app ${isDark ? "dark" : "light"}`}>
+    <div className={`app ${isDark ? "dark" : "light"} ${isLanding ? "landing" : ""}`}>
 
-      
+
       <div className="top-bar">
-        <div className="left-side">
-          <img className="logo" src="/logoMain.png" alt="Forecastly" />
-          <p className="app-name"><strong>FORECASTLY</strong></p>
-        </div>
-        <div className="group">
-          <img className="search-icon" src="/search.png" alt="" />
-          <input
-            className="input"
-            placeholder="Search City"
-            value={searchQuery}
-            disabled={showSkeleton}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") handleSearch(); }}
-          />
-          {searchError && <p className="search-error">{searchError}</p>}
+        <div className="bar-core">
+          <div className="left-side" ref={lockupRef}>
+            <img className="logo" src="/logoMain.png" alt="Forecastly" />
+            <p className="app-name"><strong>FORECASTLY</strong></p>
+          </div>
+          <div className="group" ref={groupRef}>
+            <img className="search-icon" src="/search.png" alt="" />
+            <input
+              className="input"
+              ref={inputRef}
+              placeholder="Search City"
+              value={searchQuery}
+              disabled={showSkeleton}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") handleSearch(); }}
+            />
+            {searchError && <p className="search-error">{searchError}</p>}
+          </div>
+          {isLanding && (
+            <div className="suggestions">
+              {CITY_SUGGESTIONS.map(city => (
+                <button
+                  key={city}
+                  type="button"
+                  className="suggestion"
+                  onClick={() => onSearch(city)}
+                >
+                  {city}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <div className="right-side">
           <label className="switch">
