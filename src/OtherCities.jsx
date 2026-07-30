@@ -3,6 +3,7 @@ import cloudIcon from "./assets/cloud.png";
 import rainIcon from "./assets/rain.png";
 import clearIcon from "./assets/clear.png";
 import snowIcon from "./assets/snow.png";
+import { API_KEY } from "./config.js";
 
 const weatherIcons = {
   Clouds: cloudIcon,
@@ -13,8 +14,6 @@ const weatherIcons = {
   Mist: cloudIcon,
   Haze: cloudIcon,
 };
-
-const API_KEY = import.meta.env.VITE_OWM_API_KEY;
 
 function OtherCities({ city }) {
   const [cityData, setCityData] = useState(null);
